@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { educationData } from "./educationData";
 import { experienceData } from "./experienceData";
 import { projectsData } from "./projectsData";
@@ -44,9 +44,10 @@ const cardContainerStyle = (hovered) => ({
 
 const Home = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const experienceScrollRef = useRef(null);
   const projectsScrollRef = useRef(null);
-  const careerRef = useRef(null);
 
   // Hover states
   const [eduHover, setEduHover] = useState(null);
@@ -74,16 +75,17 @@ const Home = () => {
     });
   };
 
-  // Listen for custom event to scroll to CareerNarrative
+  // Scroll to section if navigated with state (for footer/nav quick links)
   useEffect(() => {
-    const handler = () => {
-      if (careerRef.current) {
-        careerRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (location.state && location.state.scrollTo) {
+      const el = document.getElementById(location.state.scrollTo);
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: "smooth" });
+        }, 100);
       }
-    };
-    window.addEventListener("scrollToCareer", handler);
-    return () => window.removeEventListener("scrollToCareer", handler);
-  }, []);
+    }
+  }, [location]);
 
   return (
     <div style={{ color: "#fff", padding: "0", background: "#111" }}>
@@ -91,14 +93,13 @@ const Home = () => {
       <style>{`html { scroll-behavior: smooth; }`}</style>
 
       {/* About Section */}
-      <div>
+      <div id="about">
         <About />
       </div>
 
       {/* Career Narrative Section */}
       <div
-        id="about"
-        ref={careerRef}
+        id="career"
         style={{
           display: "flex",
           flexDirection: "column",
@@ -158,7 +159,7 @@ const Home = () => {
               >
                 <div style={imageWrapperStyle(eduHover === idx)}>
                   <img
-                    src={edu.image}
+                    src={process.env.PUBLIC_URL + edu.image}
                     alt={edu.school}
                     style={cardImageStyle(eduHover === idx)}
                   />
@@ -273,7 +274,7 @@ const Home = () => {
               >
                 <div style={imageWrapperStyle(expHover === idx)}>
                   <img
-                    src={exp.image}
+                    src={process.env.PUBLIC_URL + exp.image}
                     alt={exp.company}
                     style={cardImageStyle(expHover === idx)}
                   />
@@ -423,7 +424,7 @@ const Home = () => {
               >
                 <div style={imageWrapperStyle(projHover === idx)}>
                   <img
-                    src={proj.image}
+                    src={process.env.PUBLIC_URL + proj.image}
                     alt={proj.title}
                     style={cardImageStyle(projHover === idx)}
                   />
@@ -510,5 +511,3 @@ const Home = () => {
 };
 
 export default Home;
-
-

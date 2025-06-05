@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 const TudumOverlay = ({ onFinish }) => {
   useEffect(() => {
     // Play sound
-    const audio = new Audio("/assets/tudum.mp3");
+    const audio = new Audio(process.env.PUBLIC_URL + "/assets/tudum.mp3");
     audio.play();
 
     // Remove overlay after 1.5s

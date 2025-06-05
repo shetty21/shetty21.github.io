@@ -7,6 +7,7 @@ export const educationData = [
     degree: "Master of Science, Business Analytics",
     dates: "Aug 2022 – Dec 2023",
     image: "/assets/gsb.jpeg",
+    
     details: 
     [
       "Web Analytics: Used Google Analytics and web tracking tools to analyze user behavior and conversion funnels. Evaluated digital marketing performance and optimized website engagement.",

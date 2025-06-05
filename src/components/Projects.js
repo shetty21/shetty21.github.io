@@ -82,7 +82,7 @@ const Projects = () => {
                 }}
               >
                 <img
-                  src={proj.image}
+                  src={process.env.PUBLIC_URL + proj.image}
                   alt={proj.title}
                   style={{
                     width: "100px",

@@ -2,6 +2,7 @@ import React from "react";
 
 const CareerNarrative = () => (
   <section
+    id = "career"
     style={{
       maxWidth: "900px",
       margin: "6rem auto 0 auto",   // Center horizontally with auto margins

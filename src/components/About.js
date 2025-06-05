@@ -31,7 +31,7 @@ const About = () => (
         pointerEvents: "none",
         opacity: 0.68,
         background: `
-          url('/assets/a.png') right center / contain no-repeat
+          url(${process.env.PUBLIC_URL + '/assets/a.png'}) right center / contain no-repeat
         `,
         backgroundRepeat: "no-repeat",
         backgroundPosition: "right center",
@@ -96,7 +96,7 @@ const About = () => (
 </a>
 
 <a
-  href="/assets/resume.pdf"
+  href={process.env.PUBLIC_URL + "/assets/resume.pdf"}
   download="AbhidithShetty-Resume.pdf"
   className="icon-btn"
   title="Download Resume"
