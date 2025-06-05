@@ -58,7 +58,7 @@ const EducationDetail = () => {
           justifyContent: "center",
         }}>
           <img
-            src={edu.image}
+            src={process.env.PUBLIC_URL + edu.image}
             alt={edu.school}
             style={{
               width: "180px",

@@ -57,7 +57,7 @@ const ProjectDetail = () => {
           justifyContent: "center",
         }}>
           <img
-            src={proj.image}
+            src={process.env.PUBLIC_URL + proj.image}
             alt={proj.title}
             style={{
               width: "220px",

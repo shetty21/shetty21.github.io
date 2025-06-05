@@ -58,7 +58,7 @@ const ExperienceDetail = () => {
           justifyContent: "center",
         }}>
           <img
-            src={exp.image}
+            src={process.env.PUBLIC_URL + exp.image}
             alt={exp.company}
             style={{
               width: "220px",
