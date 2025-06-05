@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { experienceData } from "./experienceData";
+import { projectsData } from "./projectsData";
 
 const CARD_WIDTH = 420;
 const CARD_GAP = 140;
 
-const Experience = () => {
+const Projects = () => {
   const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(null);
 
@@ -26,7 +26,7 @@ const Experience = () => {
         marginBottom: "2rem",
         color: "#ff3333"
       }}>
-        Work Experience
+        Featured Projects
       </h2>
       <div style={{
         position: "relative",
@@ -46,7 +46,7 @@ const Experience = () => {
           transform: "translateX(-50%)"
         }} />
         {/* Timeline Items */}
-        {experienceData.map((exp, idx) => {
+        {projectsData.map((proj, idx) => {
           const isLeft = idx % 2 === 0;
           const isActive = activeIndex === idx;
           const card = (
@@ -65,12 +65,12 @@ const Experience = () => {
                 transition: "box-shadow 0.3s cubic-bezier(.25,.8,.25,1), transform 0.3s cubic-bezier(.25,.8,.25,1)",
                 transform: isActive ? "scale(1.03)" : "scale(1)"
               }}
-              onClick={() => navigate(`/experience/${exp.slug}`)}
+              onClick={() => navigate(`/projects/${proj.slug}`)}
               title="Click for more details"
               onMouseEnter={() => setActiveIndex(idx)}
               onMouseLeave={() => setActiveIndex(null)}
             >
-              {/* Logo/Image on the left */}
+              {/* Image on the left */}
               <div
                 style={{
                   flex: "0 0 100px",
@@ -82,8 +82,8 @@ const Experience = () => {
                 }}
               >
                 <img
-                  src={exp.image}
-                  alt={exp.company}
+                  src={proj.image}
+                  alt={proj.title}
                   style={{
                     width: "100px",
                     height: "100px",
@@ -106,20 +106,14 @@ const Experience = () => {
                   marginBottom: ".3rem",
                   color: "#fff"
                 }}>
-                  {exp.company}
+                  {proj.title}
                 </div>
                 <div style={{
-                  color: "#ccc",
-                  fontWeight: "normal",
+                  color: "#ff3333",
+                  fontWeight: "bold",
                   marginBottom: ".2rem"
                 }}>
-                  {exp.role}
-                </div>
-                <div style={{ color: "#ff3333", fontWeight: "bold", marginBottom: ".2rem" }}>
-                  {exp.dates}
-                </div>
-                <div style={{ color: "#aaa", marginBottom: ".2rem", fontSize: "1rem" }}>
-                  {exp.location}
+                  {proj.tools}
                 </div>
               </div>
             </div>
@@ -127,7 +121,7 @@ const Experience = () => {
 
           return (
             <div
-              key={exp.slug}
+              key={proj.slug}
               style={{
                 display: "flex",
                 justifyContent: isLeft ? "flex-start" : "flex-end",
@@ -180,4 +174,4 @@ const Experience = () => {
   );
 };
 
-export default Experience;
+export default Projects;
