@@ -10,6 +10,8 @@ import Projects from "./components/Projects"; // <-- Import Projects page
 import Footer from './components/Footer';
 import ProjectDetail from "./components/ProjectDetail";
 import SkillsPage from "./components/SkillsPage";
+import ChatBot from "./components/chatbot";
+
 
 
 function App() {
@@ -28,6 +30,7 @@ function App() {
           <Route path="/skills" element={<SkillsPage />} />
         </Routes>
         <Footer />
+         <ChatBot /> {/* ✅ Embed chatbot here */}
       </div>
     </Router>
   );

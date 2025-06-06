@@ -4,10 +4,14 @@ const CareerNarrative = () => (
   <section
     id = "career"
     style={{
-     maxWidth: "900px",
-  margin: "6rem auto 0 auto",
-  padding: "0 2vw",
-  fontSize: "1rem"
+ maxWidth: "900px",
+      margin: "6rem auto 0 auto",   // Center horizontally with auto margins
+      padding: "0 2vw",
+      color: "#fff",
+      lineHeight: 1.7,
+      fontSize: "1.13rem",
+      textAlign: "left"           
+
           // Center all text
     }}
   >
