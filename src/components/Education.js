@@ -110,7 +110,7 @@ const Education = () => {
                   style={{
                     color: "#ff3333",
                     fontWeight: "bold",
-                    fontSize: "4vw",
+                    fontSize: "1.15rem",
                     marginBottom: ".4rem",
                     wordBreak: "break-word"
                   }}
@@ -177,33 +177,31 @@ const Education = () => {
         })}
       </div>
       {/* Responsive: Stack cards on mobile */}
-<style>
-{`
-  @media (max-width: 1000px) {
-    div[style*="position: relative"][style*="padding: 2rem 0"] {
-      width: 100vw !important;
-      max-width: 100vw !important;
-    }
-    div[style*="width: 420px"] {
-      width: 95vw !important;
-      margin: 0 auto 2rem auto !important;
-      flex-direction: column !important;
-      gap: 1rem !important;
-    }
-    div[style*="flex: 0 0 100px"] {
-      width: 100% !important;
-      justify-content: center !important;
-    }
-    img[alt] {
-      width: 64px !important;
-      height: 64px !important;
-      padding: 0.5rem !important;
-    }
-  }
-
-
-`}
-</style>
+      <style>
+        {`
+        @media (max-width: 1000px) {
+          div[style*="position: relative"][style*="padding: 2rem 0"] {
+            width: 100vw !important;
+            max-width: 100vw !important;
+          }
+          div[style*="width: 420px"] {
+            width: 95vw !important;
+            margin: 0 auto 2rem auto !important;
+            flex-direction: column !important;
+            gap: 1rem !important;
+          }
+          div[style*="flex: 0 0 100px"] {
+            width: 100% !important;
+            justify-content: center !important;
+          }
+          img[alt] {
+            width: 64px !important;
+            height: 64px !important;
+            padding: 0.5rem !important;
+          }
+        }
+        `}
+      </style>
     </div>
   );
 };
