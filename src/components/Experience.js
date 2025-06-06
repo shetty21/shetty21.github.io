@@ -102,7 +102,7 @@ const Experience = () => {
               <div style={{ flex: 1 }}>
                 <div style={{
                   fontWeight: "bold",
-                  fontSize: "1.3rem",
+                  fontSize: "1.15rem",
                   marginBottom: ".3rem",
                   color: "#fff"
                 }}>

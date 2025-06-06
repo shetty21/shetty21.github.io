@@ -52,7 +52,7 @@ const EducationDetail = () => {
       >
         {/* Logo/Image on the left */}
         <div style={{
-          flex: "0 0 220px",
+          flex: "0 0 240px",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -61,8 +61,8 @@ const EducationDetail = () => {
             src={process.env.PUBLIC_URL + edu.image}
             alt={edu.school}
             style={{
-              width: "180px",
-              height: "180px",
+              width: "220px",
+              height: "220px",
               objectFit: "contain",
               background: "#fff",
               borderRadius: "16px",
@@ -97,13 +97,13 @@ const EducationDetail = () => {
               padding: 1.2rem !important;
               gap: 1.2rem !important;
             }
-            div[style*="flex: 0 0 220px"] {
+            div[style*="flex: 0 0 240px"] {
               width: 100% !important;
               justify-content: center !important;
             }
             img[alt] {
-              width: 120px !important;
-              height: 120px !important;
+              width: 140px !important;
+              height: 140px !important;
               padding: 0.7rem !important;
             }
           }

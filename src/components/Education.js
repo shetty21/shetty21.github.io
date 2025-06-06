@@ -110,26 +110,27 @@ const Education = () => {
                   style={{
                     color: "#ff3333",
                     fontWeight: "bold",
-                    fontSize: "1.15rem",
-                    marginBottom: ".4rem",
+                    fontSize: "1.3rem",
+                    marginBottom: ".3rem",
                     wordBreak: "break-word"
                   }}
                 >
                   {edu.school}
                 </div>
-                <div style={{ color: "#aaa", marginBottom: ".4rem" }}>
+                <div style={{ color: "#aaa", marginBottom: ".4rem", fontSize: "1rem" }}>
                   {edu.location}
                 </div>
                 <div
                   style={{
                     fontWeight: "bold",
-                    fontSize: "1rem",
-                    marginBottom: ".2rem"
+                    fontSize: "1.1rem",
+                    marginBottom: ".2rem",
+                    color: "#fff"
                   }}
                 >
                   {edu.degree}
                 </div>
-                <div style={{ color: "#ccc", marginBottom: ".4rem" }}>
+                <div style={{ color: "#ff3333", fontWeight: "bold", marginBottom: ".2rem" }}>
                   {edu.dates}
                 </div>
               </div>
