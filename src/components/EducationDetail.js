@@ -107,8 +107,6 @@ const EducationDetail = () => {
               padding: 0.7rem !important;
             }
           }
-
-
         `}
       </style>
     </div>
