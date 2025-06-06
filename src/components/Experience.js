@@ -175,14 +175,7 @@ const Experience = () => {
           }
         }
 
-        @media (max-width: 768px) {
-    h2 {
-      font-size: 6vw !important;
-    }
-    div[style*="padding: 3rem 0"] {
-      padding: 2rem 1rem !important;
-    }
-  }
+
         `}
       </style>
     </div>

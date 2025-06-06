@@ -107,15 +107,7 @@ const ExperienceDetail = () => {
               padding: 0.7rem !important;
             }
           }
-            @media (max-width: 768px) {
-  img[alt] {
-    width: 100px !important;
-    height: 100px !important;
-  }
-  div[style*="padding: 2.5rem"] {
-    padding: 1.2rem !important;
-  }
-}
+
 
         `}
       </style>

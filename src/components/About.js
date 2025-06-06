@@ -65,17 +65,16 @@ const About = () => (
     <div style={{
   flex: 1,
   zIndex: 2,
-  padding: "6vw",
-  textAlign: "center"
+  padding: "5vw 6vw",
 }}>
 
-      <h1 style={{ fontSize: "6vw" , fontWeight: "bold", marginBottom: "0.5rem" }}>
+      <h1 style={{ fontSize: "3rem" , fontWeight: "bold", marginBottom: "0.5rem" }}>
         Abhidith <span style={{ whiteSpace: "nowrap" }}>Shetty</span>
       </h1>
-      <h2 style={{ fontSize: "4vw", fontWeight: "bold", margin: "1rem 0" }}>
+      <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", margin: "1rem 0" }}>
         Data Analyst
       </h2>
-      <p style={{ fontSize: "3.5vw", maxWidth: "600px", marginBottom: "2rem" }}>
+      <p style={{ fontSize: "1.15rem", maxWidth: "600px", marginBottom: "2rem" }}>
         Specializing in data analytics, data mining, and data engineering with expertise in Python, SQL, Tableau, and cloud technologies.
       </p>
       <div style={{ display: "flex", gap: "1rem", marginBottom: "2rem" }}>
