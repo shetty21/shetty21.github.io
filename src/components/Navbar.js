@@ -53,8 +53,11 @@ const Navbar = () => {
           <Link to="/skills" style={navLinkStyle(location.pathname === "/skills")}>Skills</Link>
         </div>
       </nav>
+      
     </>
+    
   );
+  
 };
 
 const navLinkStyle = (active) => ({

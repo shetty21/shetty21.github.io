@@ -117,6 +117,27 @@ const Footer = () => {
       }}>
         © 2025 Abhidith Shetty. All rights reserved.
       </div>
+
+      <style>
+{`
+  @media (max-width: 768px) {
+    footer > div {
+      flex-direction: column !important;
+      text-align: center !important;
+      align-items: center !important;
+    }
+
+    footer div[style*="minWidth: 220"] {
+      margin-bottom: 2rem !important;
+    }
+
+    footer a {
+      justify-content: center !important;
+    }
+  }
+`}
+</style>
+
     </footer>
   );
 };

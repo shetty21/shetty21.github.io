@@ -110,6 +110,7 @@ const Home = () => {
           scrollMarginTop: "80px"
         }}
       >
+        
         <CareerNarrative />
       </div>
 
@@ -260,13 +261,17 @@ const Home = () => {
               gap: "2rem",
               paddingBottom: "2rem",
               scrollbarWidth: "thin",
-              scrollBehavior: "smooth"
+              scrollBehavior: "smooth",
+              scrollSnapType: "x mandatory" // <-- NEW
             }}
           >
             {experienceData.map((exp, idx) => (
-              <div
-                key={exp.slug}
-                style={cardContainerStyle(expHover === idx)}
+             <div
+  key={exp.slug}
+  style={{
+    ...cardContainerStyle(expHover === idx),
+    scrollSnapAlign: "center"
+  }}
                 onClick={() => navigate(`/experience/${exp.slug}`)}
                 title="Click for more details"
                 onMouseEnter={() => setExpHover(idx)}
@@ -410,13 +415,18 @@ const Home = () => {
               gap: "2rem",
               paddingBottom: "2rem",
               scrollbarWidth: "thin",
-              scrollBehavior: "smooth"
+              scrollBehavior: "smooth",
+              scrollSnapType: "x mandatory" // <-- NEW
             }}
           >
             {projectsData.map((proj, idx) => (
-              <div
-                key={proj.slug}
-                style={cardContainerStyle(projHover === idx)}
+             <div
+  key={proj.slug}
+  style={{
+    ...cardContainerStyle(expHover === idx),
+    scrollSnapAlign: "center"
+  }}
+                
                 onClick={() => navigate(`/projects/${proj.slug}`)}
                 title="Click for more details"
                 onMouseEnter={() => setProjHover(idx)}
