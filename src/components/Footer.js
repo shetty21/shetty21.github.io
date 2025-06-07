@@ -30,7 +30,8 @@ const iconFooterBtnStyle = {
   textDecoration: "none",
   fontWeight: "500",
   fontSize: "1rem",
-  gap: "0.3rem"
+  gap: "0.3rem",
+  justifyContent: "flex-start"
 };
 
 const Footer = () => {
@@ -68,7 +69,7 @@ const Footer = () => {
         padding: "0 2rem"
       }}>
         {/* Left Section */}
-        <div style={{ minWidth: 220, marginBottom: "1.5rem" }}>
+        <div style={{ minWidth: 220, marginBottom: "2rem" }}>
           <div style={{ fontWeight: "bold", fontSize: "1.18rem", marginBottom: ".4rem" }}>Abhidith Shetty</div>
           <div>Data Analyst</div>
           <div style={{ margin: ".3rem 0" }}>New York, NY</div>
@@ -80,13 +81,7 @@ const Footer = () => {
         <div style={{ minWidth: 160, marginBottom: "1.5rem" }}>
           <div style={{ fontWeight: "bold", fontSize: "1.1rem", marginBottom: ".4rem" }}>Quick Links</div>
           <ul style={{ listStyle: "none", padding: 0, margin: 0, lineHeight: "1.7" }}>
-            <li> <a
-      href="#career"
-      style={footerLinkStyle}
-      onClick={handleFooterLink("career")}
-    >
-      About
-    </a></li>
+            <li><a href="#career" style={footerLinkStyle} onClick={handleFooterLink("career")}>About</a></li>
             <li><a href="#education" style={footerLinkStyle} onClick={handleFooterLink("education")}>Education</a></li>
             <li><a href="#experience" style={footerLinkStyle} onClick={handleFooterLink("experience")}>Experience</a></li>
             <li><a href="#projects" style={footerLinkStyle} onClick={handleFooterLink("projects")}>Projects</a></li>
@@ -97,11 +92,16 @@ const Footer = () => {
         <div style={{ minWidth: 160, marginBottom: "1.5rem" }}>
           <div style={{ fontWeight: "bold", fontSize: "1.1rem", marginBottom: ".4rem" }}>Connect</div>
           <div style={{ display: "flex", flexDirection: "column", gap: "0.7rem" }}>
-            <a href="https://www.linkedin.com/in/abhidith-shetty-a5b341114/" target="_blank" rel="noopener noreferrer" style={iconFooterBtnStyle}>
-              <LinkedInIcon /> <span style={{ marginLeft: 8 }}>LinkedIn</span>
+            <a
+              href="https://www.linkedin.com/in/abhidith-shetty-a5b341114/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={iconFooterBtnStyle}
+            >
+              <LinkedInIcon /> <span>LinkedIn</span>
             </a>
             <a href="mailto:ab.shetty38@gmail.com" style={iconFooterBtnStyle}>
-              <EmailIcon /> <span style={{ marginLeft: 8 }}>Email</span>
+              <EmailIcon /> <span>Email</span>
             </a>
           </div>
         </div>
@@ -117,22 +117,6 @@ const Footer = () => {
       }}>
         © 2025 Abhidith Shetty. All rights reserved.
       </div>
-
-      <style>
-{`
-  
-
-    footer div[style*="minWidth: 220"] {
-      margin-bottom: 2rem !important;
-    }
-
-    footer a {
-      justify-content: center !important;
-    }
-  
-`}
-</style>
-
     </footer>
   );
 };
