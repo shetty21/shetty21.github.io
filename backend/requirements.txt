@@ -1,0 +1,3 @@
+fastapi
+uvicorn
+# add any other dependencies your project uses

@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 
 // Streaming helper (same as before)
 async function streamBotReply(message, onChunk) {
-  const res = await fetch("http://localhost:8000/chat", {
+  const res = await fetch("https://shetty21-github-io.vercel.app/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ message }),
