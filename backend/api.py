@@ -112,7 +112,6 @@ def is_contact_question(question):
         "contact", "email", "reach", "get in touch", "connect", "how do i contact", "how can i contact"
     ])
 
-
 def extract_company_filter(question):
     match = re.search(r"\b(G2|Tambellini|Sunergi|CrossTower|Apptio|Molecular Connections)\b", question, re.I)
     return match.group(1) if match else None
@@ -135,7 +134,6 @@ async def chat(request: Request):
             yield "Please enter a question."
         return StreamingResponse(stream_empty(), media_type="text/plain")
 
-    # Friendly, inviting greeting
     if is_greeting(question):
         def stream_greeting():
             yield (
@@ -145,16 +143,22 @@ async def chat(request: Request):
             )
         return StreamingResponse(stream_greeting(), media_type="text/plain")
 
-    # Direct answer for current job questions
-    if is_current_job_question(question):
+    elif is_contact_question(question):
+        def stream_contact():
+            yield (
+                "You can contact Abhidith Shetty via email at ab.shetty38@gmail.com "
+                "or connect with him on LinkedIn: https://www.linkedin.com/in/abhidith-shetty-a5b341114/"
+            )
+        return StreamingResponse(stream_contact(), media_type="text/plain")
+
+    elif is_current_job_question(question):
         experience_section = extract_section(SECTION_HEADINGS["experience"])
         answer = extract_current_job(experience_section)
         def stream_current_job():
             yield answer
         return StreamingResponse(stream_current_job(), media_type="text/plain")
 
-    # Direct college name extraction
-    if is_college_names_question(question):
+    elif is_college_names_question(question):
         context = extract_section(SECTION_HEADINGS["education"])
         prompt = (
             "Extract ONLY the names of the colleges or universities where Abhidith Shetty studied, "
@@ -162,16 +166,6 @@ async def chat(request: Request):
             "If information is missing, say 'I don't know.'\n\n"
             f"Context:\n{context}"
         )
-
-    if is_contact_question(question):
-    def stream_contact():
-        yield (
-            "You can contact Abhidith Shetty via email at ab.shetty38@gmail.com "
-            "or connect with him on LinkedIn: https://www.linkedin.com/in/abhidith-shetty-a5b341114/"
-        )
-    return StreamingResponse(stream_contact(), media_type="text/plain")
-
-    # Direct filter for a specific college
     elif (college := extract_college_name_filter(question)):
         context = extract_section(SECTION_HEADINGS["education"])
         prompt = (
@@ -180,7 +174,6 @@ async def chat(request: Request):
             "If information is missing, say 'I don't know.'\n\n"
             f"Context:\n{context}"
         )
-    # Degree completion date extraction
     elif is_degree_completion_question(question):
         context = extract_section(SECTION_HEADINGS["education"])
         prompt = (
@@ -189,7 +182,6 @@ async def chat(request: Request):
             "If information is missing, say 'I don't know.'\n\n"
             f"Context:\n{context}"
         )
-    # Company-specific experience extraction
     elif (company := extract_company_filter(question)):
         context = extract_section(SECTION_HEADINGS["experience"])
         prompt = (
@@ -197,7 +189,6 @@ async def chat(request: Request):
             "Include role, duration, location, and key responsibilities. If missing, say 'I don't know.'\n\n"
             f"Context:\n{context}"
         )
-    # Location-based experience extraction
     elif (location := extract_location_filter(question)):
         context = extract_section(SECTION_HEADINGS["experience"])
         prompt = (
@@ -205,7 +196,6 @@ async def chat(request: Request):
             "For each, include the company name, role, location, and duration. If information is missing, say 'I don't know.'\n\n"
             f"Context:\n{context}"
         )
-    # Projects summary/expansion logic
     elif "project" in question.lower():
         context = extract_section(SECTION_HEADINGS["projects"])
         if wants_more_details(question):
@@ -218,7 +208,7 @@ async def chat(request: Request):
             prompt = (
                 "Summarize Abhidith Shetty's academic projects in a concise paragraph, "
                 "highlighting only the main topics and achievements. "
-                "At the end, ask if the user would like more detailed information about any specific project."
+                "At the end, ask if the user would like more detailed information about any specific project. "
                 "If information is missing, say 'I don't know.'\n\n"
                 f"Context:\n{context}"
             )
