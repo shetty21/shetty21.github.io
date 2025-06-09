@@ -106,6 +106,13 @@ def is_degree_completion_question(question):
         and ("biotechnology" in q or "rv college" in q or "bachelor" in q or "undergraduate" in q)
     )
 
+def is_contact_question(question):
+    q = question.lower()
+    return any(word in q for word in [
+        "contact", "email", "reach", "get in touch", "connect", "how do i contact", "how can i contact"
+    ])
+
+
 def extract_company_filter(question):
     match = re.search(r"\b(G2|Tambellini|Sunergi|CrossTower|Apptio|Molecular Connections)\b", question, re.I)
     return match.group(1) if match else None
@@ -155,6 +162,15 @@ async def chat(request: Request):
             "If information is missing, say 'I don't know.'\n\n"
             f"Context:\n{context}"
         )
+
+    if is_contact_question(question):
+    def stream_contact():
+        yield (
+            "You can contact Abhidith Shetty via email at ab.shetty38@gmail.com "
+            "or connect with him on LinkedIn: https://www.linkedin.com/in/abhidith-shetty-a5b341114/"
+        )
+    return StreamingResponse(stream_contact(), media_type="text/plain")
+
     # Direct filter for a specific college
     elif (college := extract_college_name_filter(question)):
         context = extract_section(SECTION_HEADINGS["education"])
