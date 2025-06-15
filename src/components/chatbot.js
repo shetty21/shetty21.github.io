@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 
 // Streaming helper (same as before)
 async function streamBotReply(message, onChunk) {
-  const res = await fetch("http://localhost:8000/chat", { // This URL will remain the same
+  const res = await fetch("/api/chat", {// This URL will remain the same
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ message }),
