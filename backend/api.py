@@ -1,14 +1,8 @@
-import os
-import re
-import google.generativeai as genai
+import ollama
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
-from dotenv import load_dotenv
-
-
-# Load environment variables from .env file (if you have one)
-load_dotenv()
+import re
 
 app = FastAPI()
 app.add_middleware(
@@ -19,35 +13,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Configure Google Gemini API
-# It's highly recommended to store your API key in an environment variable
-# For example, in a .env file: GOOGLE_API_KEY="your_api_key_here"
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-if not GOOGLE_API_KEY:
-    raise ValueError("GOOGLE_API_KEY not found. Please set it in your environment variables or .env file.")
-genai.configure(api_key=GOOGLE_API_KEY)
-
-# Initialize the Gemini Pro model
-# You can choose other models like 'gemini-pro-vision' if you need multimodal capabilities
-model = genai.GenerativeModel('gemini-1.5-flash')
-
 with open("knowledge_base.txt", "r", encoding="utf-8") as f:
     raw_kb = f.read()
 
 SECTION_HEADINGS = {
-    "education": "Education", # Removed "Abhidith's" for cleaner matching
-    "experience": "Experience", # Removed "Abhidith's" for cleaner matching
-    "project": "Projects", # Removed "Abhidith's Academic" for cleaner matching
-    "projects": "Projects",
-    "academic projects": "Projects",
+    "education": "Abhidith's Education",
+    "experience": "Abhidith's Professional Experience",
+    "project": "Abhidith's Academic Projects",
+    "projects": "Abhidith's Academic Projects",
+    "academic projects": "Abhidith's Academic Projects",
 }
 
 def extract_section(section_heading):
-    # This regex needs to be careful not to gobble up the next section
-    # Use a more robust pattern to find content until the next major heading or end of file
-    # Example: Look for the heading, then capture until another major heading or end of string
+    # Updated pattern to capture content until the next known section heading or end of string.
+    # The original pattern `(?=\nAbhidith's |\Z)` was specific to "Abhidith's " prefix
+    # We should make it more general to handle any next SECTION_HEADINGS value.
     all_headings_pattern = "|".join(re.escape(h) for h in SECTION_HEADINGS.values())
-    pattern = rf"({re.escape(section_heading)})\s*(.*?)(?=\n(?:{all_headings_pattern})|\Z)"
+    pattern = rf"{re.escape(section_heading)}(.*?)(?=\n(?:{all_headings_pattern})|\Z)"
     match = re.search(pattern, raw_kb, re.DOTALL | re.IGNORECASE)
     if match:
         # Return only the content after the heading, stripped of leading/trailing whitespace
@@ -81,7 +63,7 @@ def is_current_job_question(question):
             "present job",
             "present employer",
             "who is he working for now",
-            "who does he work for now",
+            "who does he work for for now",
             "what is his job now",
             "who is his employer now",
             "who is he with now",
@@ -89,16 +71,17 @@ def is_current_job_question(question):
         ]
     )
 
-def extract_current_job(experience_section_content):
-    # Ensure this pattern looks for the 'Present' marker within the text extracted
-    # Updated to correctly parse the "Tambellini Group, now a part of MGT Data Analyst Sep 2023 – Present USA - Remote" format
+def extract_current_job(experience_section):
+    # Re-adjusted regex to match the observed format: "Company, now a part of MGT Data Analyst Sep 2023 – Present USA - Remote"
+    # Or "Tambellini Group, now a part of MGT Data Analyst Sep 2023 – Present USA - Remote"
+    # The previous regex expected "Role: ... Location: ... Duration: ..." which isn't in the provided text.
     job_pattern = re.compile(
         r"^(?P<company>.+?) Data Analyst(?P<role_suffix>.*?) Sep (?P<start_year>\d{4}) – Present (?P<location>.+)$",
         re.MULTILINE
     )
-    match = job_pattern.search(experience_section_content)
+    match = job_pattern.search(experience_section)
     if match:
-        company = match.group("company").replace(", now a part of MGT", "").strip() # Clean company name
+        company = match.group("company").replace(", now a part of MGT", "").strip()
         role = "Data Analyst" + match.group("role_suffix").strip()
         start_year = match.group("start_year").strip()
         location = match.group("location").strip()
@@ -139,7 +122,7 @@ def is_contact_question(question):
     ])
 
 def extract_company_filter(question):
-    # Add more robust matching for company names, including partial matches
+    # Added MGT for Tambellini Group if it's separate in KB.
     companies = ["G2", "Tambellini Group", "MGT", "Sunergi", "CrossTower", "Apptio", "Molecular Connections"]
     for company in companies:
         if company.lower() in question.lower():
@@ -153,14 +136,21 @@ def extract_location_filter(question):
 def get_project_from_query(query):
     # More specific project name matching
     projects = [
-        "Glassdoor Job Postings", "Flight Status Prediction",
-        "ICT and Quality of Life", "Stellar Classification"
+        "Web Scraping and Exploratory Data Analysis of Glassdoor Job Postings",
+        "Flight Status Prediction Using Machine Learning Models",
+        "Exploring the Association between ICT and Quality of Life: An Empirical Study",
+        "Stellar Classification Using Machine Learning: Classifying Stars, Galaxies, and Quasars"
     ]
     q = query.lower()
     for project in projects:
         if project.lower() in q:
+            # Return the exact project title for precise prompting
             return project
     return None
+
+def wants_more_details(question):
+    q = question.lower()
+    return any(word in q for word in ["more", "details", "full", "expand", "show all", "tell me more", "in depth", "yes"])
 
 @app.post("/chat")
 async def chat(request: Request):
@@ -190,9 +180,8 @@ async def chat(request: Request):
         return StreamingResponse(stream_contact(), media_type="text/plain")
 
     elif is_current_job_question(question):
-        # Extract content only, not the heading from extract_section
-        experience_section_content = extract_section(SECTION_HEADINGS["experience"])
-        answer = extract_current_job(experience_section_content)
+        experience_section = extract_section(SECTION_HEADINGS["experience"])
+        answer = extract_current_job(experience_section)
         def stream_current_job():
             yield answer
         return StreamingResponse(stream_current_job(), media_type="text/plain")
@@ -238,7 +227,7 @@ async def chat(request: Request):
             "For each, include the company name, role, location, and duration. If information is missing, say 'I don't know.'\n\n"
             f"Context:\n{context}"
         )
-    elif (project_name := get_project_from_query(question)):
+    elif (project_name := get_project_from_query(question)): # Specific project asked
         context = extract_section(SECTION_HEADINGS["projects"])
         prompt = (
             f"Provide detailed information about Abhidith Shetty's project titled '{project_name}' from the following context. "
@@ -247,7 +236,7 @@ async def chat(request: Request):
             "If the project is not found or has no details, state 'I don't have detailed information for the project titled '{project_name}' based on the available data.'\n\n"
             f"Context:\n{context}"
         )
-    elif "project" in question.lower() or wants_more_details(question): # Catch general project questions or follow-up 'yes' for details
+    elif "project" in question.lower() or wants_more_details(question): # General project question or follow-up 'yes' for details
         context = extract_section(SECTION_HEADINGS["projects"])
         prompt = (
             "Summarize all of Abhidith Shetty's academic projects. For each project, briefly mention its title, main objective, and a key tool or result. "
@@ -277,7 +266,7 @@ async def chat(request: Request):
                     "Write in a natural, flowing style. If information is missing, say 'I don't know.'\n\n"
                     f"Context:\n{context}"
                 )
-            elif "projects" in section_heading.lower(): # Changed from 'project' to 'projects' for consistency
+            elif "project" in section_heading.lower():
                 prompt = (
                     "Summarize Abhidith Shetty's academic projects based on the following context. "
                     "List the main projects, their objectives, tools/technologies used, and key findings or outcomes. "
@@ -291,8 +280,8 @@ async def chat(request: Request):
                     f"Context:\n{context}"
                 )
         else:
-            # Fallback: general prompt with the whole KB
-            context = raw_kb
+            # Fallback: general prompt with the whole KB (truncated)
+            context = raw_kb[:2500] # Ensure context size is manageable for LLM
             prompt = (
                 "You are Abhidith Shetty’s AI assistant. Answer the question using only the context provided, "
                 "in a friendly but concise third-person style. If info is missing, say 'I don't know.'\n\n"
@@ -301,22 +290,14 @@ async def chat(request: Request):
 
     def llm_stream():
         try:
-            response_stream = model.generate_content(
-                prompt,
-                stream=True,
-                safety_settings={
-                    "HARM_CATEGORY_HARASSMENT": "BLOCK_NONE",
-                    "HARM_CATEGORY_HATE_SPEECH": "BLOCK_NONE",
-                    "HARM_CATEGORY_SEXUALLY_EXPLICIT": "BLOCK_NONE",
-                    "HARM_CATEGORY_DANGEROUS_CONTENT": "BLOCK_NONE",
-                }
-            )
-            for chunk in response_stream:
-                content = chunk.text
+            stream = ollama.chat(model="llama3", messages=[{"role": "user", "content": prompt}], stream=True)
+            for chunk in stream:
+                content = chunk.get('message', {}).get('content', '')
                 if content:
                     yield content
         except Exception as e:
-            print(f"Error calling Gemini API: {e}")
+            # Print the actual exception for debugging locally
+            print(f"Error calling Ollama: {e}")
             yield "Sorry, something went wrong. Please try again later."
 
     return StreamingResponse(llm_stream(), media_type="text/plain")

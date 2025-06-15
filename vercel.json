@@ -1,27 +1,8 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "backend/api.py",
-      "use": "@vercel/python",
-      "config": {
-        "excludeFiles": "build_kb.py,extract_docs.py,chroma_db/**,__pycache__/**,.env"
-      }
-    },  
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": { "outputDirectory": "build" }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "backend/api.py"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ]
+"builds": [
+{ "src": "backend/api.py", "use": "@vercel/python" }
+],
+"routes": [
+{ "src": "/(.*)", "dest": "backend/api.py" }
+]
 }
