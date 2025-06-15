@@ -20,5 +20,10 @@
       "src": "/(.*)",
       "dest": "/$1"
     }
-  ]
+  ],
+  "functions": {
+    "backend/api.py": {
+      "excludeFiles": "build_kb.py,extract_docs.py,chroma_db/**,__pycache__/**,.env"
+    }
+  }
 }
