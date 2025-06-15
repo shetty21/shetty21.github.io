@@ -6,9 +6,8 @@
       "use": "@vercel/python",
       "config": {
         "excludeFiles": "build_kb.py,extract_docs.py,chroma_db/**,__pycache__/**,.env"
-        // IMPORTANT: knowledge_base.txt is NOT excluded here, as your api.py reads it.
       }
-    },
+    },  <-- ADDED THIS COMMA
     {
       "src": "package.json",
       "use": "@vercel/static-build",
