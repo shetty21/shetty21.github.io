@@ -1,8 +1,14 @@
-import ollama
+import os
+import re
+import google.generativeai as genai
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
-import re
+from dotenv import load_dotenv
+
+
+# Load environment variables from .env file (if you have one)
+load_dotenv()
 
 app = FastAPI()
 app.add_middleware(
@@ -13,22 +19,39 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Configure Google Gemini API
+# It's highly recommended to store your API key in an environment variable
+# For example, in a .env file: GOOGLE_API_KEY="your_api_key_here"
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+if not GOOGLE_API_KEY:
+    raise ValueError("GOOGLE_API_KEY not found. Please set it in your environment variables or .env file.")
+genai.configure(api_key=GOOGLE_API_KEY)
+
+# Initialize the Gemini Pro model
+# You can choose other models like 'gemini-pro-vision' if you need multimodal capabilities
+model = genai.GenerativeModel('gemini-1.5-flash')
+
 with open("knowledge_base.txt", "r", encoding="utf-8") as f:
     raw_kb = f.read()
 
 SECTION_HEADINGS = {
-    "education": "Abhidith's Education",
-    "experience": "Abhidith's Professional Experience",
-    "project": "Abhidith's Academic Projects",
-    "projects": "Abhidith's Academic Projects",
-    "academic projects": "Abhidith's Academic Projects",
+    "education": "Education", # Removed "Abhidith's" for cleaner matching
+    "experience": "Experience", # Removed "Abhidith's" for cleaner matching
+    "project": "Projects", # Removed "Abhidith's Academic" for cleaner matching
+    "projects": "Projects",
+    "academic projects": "Projects",
 }
 
 def extract_section(section_heading):
-    pattern = rf"{re.escape(section_heading)}(.*?)(?=\nAbhidith's |\Z)"
+    # This regex needs to be careful not to gobble up the next section
+    # Use a more robust pattern to find content until the next major heading or end of file
+    # Example: Look for the heading, then capture until another major heading or end of string
+    all_headings_pattern = "|".join(re.escape(h) for h in SECTION_HEADINGS.values())
+    pattern = rf"({re.escape(section_heading)})\s*(.*?)(?=\n(?:{all_headings_pattern})|\Z)"
     match = re.search(pattern, raw_kb, re.DOTALL | re.IGNORECASE)
     if match:
-        return section_heading + match.group(1)
+        # Return only the content after the heading, stripped of leading/trailing whitespace
+        return match.group(2).strip()
     return ""
 
 def get_section_from_query(query):
@@ -66,19 +89,22 @@ def is_current_job_question(question):
         ]
     )
 
-def extract_current_job(experience_section):
+def extract_current_job(experience_section_content):
+    # Ensure this pattern looks for the 'Present' marker within the text extracted
+    # Updated to correctly parse the "Tambellini Group, now a part of MGT Data Analyst Sep 2023 – Present USA - Remote" format
     job_pattern = re.compile(
-        r"(?P<company>.+?) Role: (?P<role>.+?) Location: (?P<location>.+?) Duration: (?P<duration>.+?Present)(.*?)(?=Abhidith's Professional Experience|\Z)",
-        re.DOTALL
+        r"^(?P<company>.+?) Data Analyst(?P<role_suffix>.*?) Sep (?P<start_year>\d{4}) – Present (?P<location>.+)$",
+        re.MULTILINE
     )
-    match = job_pattern.search(experience_section)
+    match = job_pattern.search(experience_section_content)
     if match:
-        company = match.group("company").strip()
-        role = match.group("role").strip()
+        company = match.group("company").replace(", now a part of MGT", "").strip() # Clean company name
+        role = "Data Analyst" + match.group("role_suffix").strip()
+        start_year = match.group("start_year").strip()
         location = match.group("location").strip()
-        duration = match.group("duration").strip()
-        return f"Abhidith Shetty is currently working as a {role} at {company}, {location} (since {duration})."
+        return f"Abhidith Shetty is currently working as a {role} at {company}, {location} (since September {start_year})."
     return "I don't know his current job based on the available information."
+
 
 def is_college_names_question(question):
     q = question.lower()
@@ -113,16 +139,28 @@ def is_contact_question(question):
     ])
 
 def extract_company_filter(question):
-    match = re.search(r"\b(G2|Tambellini|Sunergi|CrossTower|Apptio|Molecular Connections)\b", question, re.I)
-    return match.group(1) if match else None
+    # Add more robust matching for company names, including partial matches
+    companies = ["G2", "Tambellini Group", "MGT", "Sunergi", "CrossTower", "Apptio", "Molecular Connections"]
+    for company in companies:
+        if company.lower() in question.lower():
+            return company
+    return None
 
 def extract_location_filter(question):
     match = re.search(r"\b(india|bengaluru|bangalore|usa|new york|new jersey)\b", question, re.I)
     return match.group(1) if match else None
 
-def wants_more_details(question):
-    q = question.lower()
-    return any(word in q for word in ["more", "details", "full", "expand", "show all", "tell me more", "in depth", "yes"])
+def get_project_from_query(query):
+    # More specific project name matching
+    projects = [
+        "Glassdoor Job Postings", "Flight Status Prediction",
+        "ICT and Quality of Life", "Stellar Classification"
+    ]
+    q = query.lower()
+    for project in projects:
+        if project.lower() in q:
+            return project
+    return None
 
 @app.post("/chat")
 async def chat(request: Request):
@@ -152,8 +190,9 @@ async def chat(request: Request):
         return StreamingResponse(stream_contact(), media_type="text/plain")
 
     elif is_current_job_question(question):
-        experience_section = extract_section(SECTION_HEADINGS["experience"])
-        answer = extract_current_job(experience_section)
+        # Extract content only, not the heading from extract_section
+        experience_section_content = extract_section(SECTION_HEADINGS["experience"])
+        answer = extract_current_job(experience_section_content)
         def stream_current_job():
             yield answer
         return StreamingResponse(stream_current_job(), media_type="text/plain")
@@ -184,9 +223,12 @@ async def chat(request: Request):
         )
     elif (company := extract_company_filter(question)):
         context = extract_section(SECTION_HEADINGS["experience"])
+        # More precise prompt for company details
         prompt = (
-            f"Extract ONLY information about Abhidith's work at {company} from the context. "
-            "Include role, duration, location, and key responsibilities. If missing, say 'I don't know.'\n\n"
+            f"From the following context, describe Abhidith Shetty's experience at {company}. "
+            "Include his role, duration, location, and a concise summary of his key responsibilities and achievements there. "
+            "If information is missing for a specific detail, state that you don't know only for that detail. "
+            "If no information is found for the company, state 'I don't know about his experience at {company} based on the available information.'\n\n"
             f"Context:\n{context}"
         )
     elif (location := extract_location_filter(question)):
@@ -196,22 +238,23 @@ async def chat(request: Request):
             "For each, include the company name, role, location, and duration. If information is missing, say 'I don't know.'\n\n"
             f"Context:\n{context}"
         )
-    elif "project" in question.lower():
+    elif (project_name := get_project_from_query(question)):
         context = extract_section(SECTION_HEADINGS["projects"])
-        if wants_more_details(question):
-            prompt = (
-                "List and describe in detail all of Abhidith Shetty's academic projects, including objectives, tools, methods, and key results. "
-                "If information is missing, say 'I don't know.'\n\n"
-                f"Context:\n{context}"
-            )
-        else:
-            prompt = (
-                "Summarize Abhidith Shetty's academic projects in a concise paragraph, "
-                "highlighting only the main topics and achievements. "
-                "At the end, ask if the user would like more detailed information about any specific project. "
-                "If information is missing, say 'I don't know.'\n\n"
-                f"Context:\n{context}"
-            )
+        prompt = (
+            f"Provide detailed information about Abhidith Shetty's project titled '{project_name}' from the following context. "
+            "Include its objectives, the tools/technologies used, the methods employed, and the key results or achievements. "
+            "If information is missing, state 'I don't know about that specific detail for this project.' "
+            "If the project is not found or has no details, state 'I don't have detailed information for the project titled '{project_name}' based on the available data.'\n\n"
+            f"Context:\n{context}"
+        )
+    elif "project" in question.lower() or wants_more_details(question): # Catch general project questions or follow-up 'yes' for details
+        context = extract_section(SECTION_HEADINGS["projects"])
+        prompt = (
+            "Summarize all of Abhidith Shetty's academic projects. For each project, briefly mention its title, main objective, and a key tool or result. "
+            "Conclude by asking if the user would like more detailed information about any specific project (e.g., 'Tell me about the Glassdoor project.'). "
+            "If information is missing, say 'I don't know.'\n\n"
+            f"Context:\n{context}"
+        )
     else:
         # Section-aware summarization logic
         section_heading = get_section_from_query(question)
@@ -234,7 +277,7 @@ async def chat(request: Request):
                     "Write in a natural, flowing style. If information is missing, say 'I don't know.'\n\n"
                     f"Context:\n{context}"
                 )
-            elif "project" in section_heading.lower():
+            elif "projects" in section_heading.lower(): # Changed from 'project' to 'projects' for consistency
                 prompt = (
                     "Summarize Abhidith Shetty's academic projects based on the following context. "
                     "List the main projects, their objectives, tools/technologies used, and key findings or outcomes. "
@@ -248,8 +291,8 @@ async def chat(request: Request):
                     f"Context:\n{context}"
                 )
         else:
-            # Fallback: general prompt with the whole KB (truncated)
-            context = raw_kb[:2500]
+            # Fallback: general prompt with the whole KB
+            context = raw_kb
             prompt = (
                 "You are Abhidith Shetty’s AI assistant. Answer the question using only the context provided, "
                 "in a friendly but concise third-person style. If info is missing, say 'I don't know.'\n\n"
@@ -258,12 +301,22 @@ async def chat(request: Request):
 
     def llm_stream():
         try:
-            stream = ollama.chat(model="llama3", messages=[{"role": "user", "content": prompt}], stream=True)
-            for chunk in stream:
-                content = chunk.get('message', {}).get('content', '')
+            response_stream = model.generate_content(
+                prompt,
+                stream=True,
+                safety_settings={
+                    "HARM_CATEGORY_HARASSMENT": "BLOCK_NONE",
+                    "HARM_CATEGORY_HATE_SPEECH": "BLOCK_NONE",
+                    "HARM_CATEGORY_SEXUALLY_EXPLICIT": "BLOCK_NONE",
+                    "HARM_CATEGORY_DANGEROUS_CONTENT": "BLOCK_NONE",
+                }
+            )
+            for chunk in response_stream:
+                content = chunk.text
                 if content:
                     yield content
-        except Exception:
+        except Exception as e:
+            print(f"Error calling Gemini API: {e}")
             yield "Sorry, something went wrong. Please try again later."
 
     return StreamingResponse(llm_stream(), media_type="text/plain")
