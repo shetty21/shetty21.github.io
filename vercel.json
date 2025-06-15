@@ -7,7 +7,7 @@
       "config": {
         "excludeFiles": "build_kb.py,extract_docs.py,chroma_db/**,__pycache__/**,.env"
       }
-    },  <-- ADDED THIS COMMA
+    },  
     {
       "src": "package.json",
       "use": "@vercel/static-build",
