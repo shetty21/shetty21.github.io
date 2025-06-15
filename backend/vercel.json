@@ -1,8 +1,25 @@
 {
-"builds": [
-{ "src": "backend/api.py", "use": "@vercel/python" }
-],
-"routes": [
-{ "src": "/(.*)", "dest": "backend/api.py" }
-]
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/backend/api.py"
+    }
+  ],
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": { "outputDirectory": "build" } 
+    },
+    {
+      "src": "backend/api.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
 }
