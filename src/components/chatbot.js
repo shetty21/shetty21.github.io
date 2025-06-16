@@ -1,8 +1,9 @@
 import React, { useState, useRef } from "react";
 
+const apiBaseUrl = "https://your-vercel-app.vercel.app/api";
 // Streaming helper (same as before)
 async function streamBotReply(message, onChunk) {
-  const res = await fetch("http://localhost:8000/api/chat", { // This URL will remain the same
+  const res = await fetch(`${apiBaseUrl}/chat`, { // This URL will remain the same
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ message }),
