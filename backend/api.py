@@ -152,7 +152,7 @@ def wants_more_details(question):
     q = question.lower()
     return any(word in q for word in ["more", "details", "full", "expand", "show all", "tell me more", "in depth", "yes"])
 
-@app.post("/chat")
+@app.post("/api/chat")
 async def chat(request: Request):
     data = await request.json()
     question = data.get("message", "").strip()
