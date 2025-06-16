@@ -1,7 +1,0 @@
-fastapi
-uvicorn
-chromadb
-sentence-transformers
-langchain
-kreuzberg
-ollama

@@ -4,7 +4,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 import re
 
+
+
 app = FastAPI()
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -151,6 +155,8 @@ def get_project_from_query(query):
 def wants_more_details(question):
     q = question.lower()
     return any(word in q for word in ["more", "details", "full", "expand", "show all", "tell me more", "in depth", "yes"])
+
+
 
 @app.post("/api/chat")
 async def chat(request: Request):
