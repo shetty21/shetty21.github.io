@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Danny's Diner case study</title>
+  <desc id="desc">A red ramen bowl with chopsticks on a dark background.</desc>
+  <rect width="512" height="512" rx="72" fill="#1d1d1d"/>
+  <path d="M112 260h288c0 91-62 156-144 156S112 351 112 260Z" fill="#ef4444"/>
+  <path d="M128 276h256c-12 69-62 116-128 116s-116-47-128-116Z" fill="#ff7777"/>
+  <path d="M145 235c18-45 43 11 63-29s45 13 65-27 50 15 73-22" fill="none" stroke="#f8e6c9" stroke-linecap="round" stroke-width="18"/>
+  <path d="M172 140c-16 34 16 42 0 76M256 126c-16 38 16 48 0 88M340 140c-16 34 16 42 0 76" fill="none" stroke="#d7d7d7" stroke-linecap="round" stroke-width="12"/>
+  <path d="m125 112 263 88M136 83l263 88" stroke="#d6a867" stroke-linecap="round" stroke-width="15"/>
+  <circle cx="213" cy="307" r="11" fill="#f8e6c9"/>
+  <circle cx="256" cy="333" r="11" fill="#f8e6c9"/>
+  <circle cx="302" cy="302" r="11" fill="#f8e6c9"/>
+</svg>
