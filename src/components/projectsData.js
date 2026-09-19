@@ -1,6 +1,19 @@
 // projectsData.js
 export const projectsData = [
   {
+    slug: "dannys-diner-sql-case-study",
+    title: "Danny's Diner: Customer & Loyalty Analysis",
+    image: "/assets/dannys-diner.svg",
+    tools: "PostgreSQL, CTEs, JOINs, Window Functions, Aggregation",
+    sourceUrl: "https://github.com/shetty21/Data_Analysis/tree/main/case-studies/01-dannys-diner",
+    bullets: [
+      "Analyzed restaurant purchase data to uncover customer spending, visit frequency, and menu preferences across sales, menu, and loyalty-member tables.",
+      "Used joins, common table expressions, aggregations, and window functions to answer 12 business questions and build reusable reporting views.",
+      "Identified ramen as the most-purchased item, with customer A generating the highest overall spend at $76.",
+      "Calculated loyalty points under standard sushi rewards and a first-week membership promotion, supporting loyalty-program evaluation."
+    ]
+  },
+  {
     slug: "glassdoor-job-analysis",
     title: "Web Scraping and Exploratory Data Analysis of Glassdoor Job Postings",
     image: "/assets/glass.png",
@@ -52,4 +65,3 @@ export const projectsData = [
   ]
 }
 ];
-

@@ -82,6 +82,25 @@ const ProjectDetail = () => {
               </li>
             ))}
           </ul>
+          {proj.sourceUrl && (
+            <a
+              href={proj.sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              style={{
+                display: "inline-block",
+                marginTop: "0.8rem",
+                background: "#ff3333",
+                color: "#fff",
+                borderRadius: "8px",
+                padding: "0.7rem 1rem",
+                textDecoration: "none",
+                fontWeight: "bold"
+              }}
+            >
+              View case study on GitHub →
+            </a>
+          )}
         </div>
       </div>
       {/* Responsive styling */}
