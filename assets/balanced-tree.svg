@@ -1,0 +1,19 @@
+<svg width="640" height="480" viewBox="0 0 640 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="480" rx="36" fill="#F7FAFC"/>
+  <rect x="64" y="70" width="512" height="340" rx="28" fill="#111827"/>
+  <rect x="96" y="102" width="448" height="276" rx="22" fill="#FFFFFF"/>
+  <path d="M222 175C222 145.729 245.729 122 275 122H365C394.271 122 418 145.729 418 175V178H222V175Z" fill="#EF4444"/>
+  <path d="M222 178H418L398 322C395.94 336.833 383.256 347.875 368.281 347.875H271.719C256.744 347.875 244.06 336.833 242 322L222 178Z" fill="#2563EB"/>
+  <path d="M282 122H358L346 178H294L282 122Z" fill="#F8FAFC"/>
+  <path d="M302 122H338L330 178H310L302 122Z" fill="#111827"/>
+  <path d="M252 212H388" stroke="#F8FAFC" stroke-width="12" stroke-linecap="round"/>
+  <path d="M260 252H380" stroke="#F8FAFC" stroke-width="12" stroke-linecap="round"/>
+  <path d="M274 292H366" stroke="#F8FAFC" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="151" cy="322" r="32" fill="#10B981"/>
+  <circle cx="489" cy="322" r="32" fill="#F59E0B"/>
+  <path d="M151 292V185" stroke="#10B981" stroke-width="14" stroke-linecap="round"/>
+  <path d="M489 292V185" stroke="#F59E0B" stroke-width="14" stroke-linecap="round"/>
+  <path d="M151 185H249" stroke="#10B981" stroke-width="14" stroke-linecap="round"/>
+  <path d="M391 185H489" stroke="#F59E0B" stroke-width="14" stroke-linecap="round"/>
+  <text x="320" y="405" text-anchor="middle" fill="#111827" font-family="Arial, sans-serif" font-size="30" font-weight="700">Balanced Tree SQL</text>
+</svg>
