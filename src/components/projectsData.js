@@ -1,6 +1,19 @@
 // projectsData.js
 export const projectsData = [
   {
+    slug: "balanced-tree-clothing-sql-case-study",
+    title: "Balanced Tree Clothing Co.: Retail Sales Analysis",
+    image: "/assets/balanced-tree.svg",
+    tools: "PostgreSQL, CTEs, Window Functions, Percentiles, Market Basket Analysis",
+    sourceUrl: "https://github.com/shetty21/Data_Analysis/tree/main/case-studies/02-balanced-tree-clothing",
+    bullets: [
+      "Built a monthly retail reporting case study across transaction sales, product catalog, category, segment, and style hierarchy data.",
+      "Analyzed 45,216 items sold, $1.29M in gross revenue, $156K in discounts, and member vs non-member transaction behavior.",
+      "Used percentiles, CTEs, window functions, and segmentation logic to compare revenue, discounts, and top-selling products across categories.",
+      "Added market basket analysis to identify the most common 3-product transaction combination and a recursive CTE to rebuild product details."
+    ]
+  },
+  {
     slug: "dannys-diner-sql-case-study",
     title: "Danny's Diner: Customer & Loyalty Analysis",
     image: "/assets/dannys-diner.svg",
