@@ -36,6 +36,7 @@ const ProjectDetail = () => {
         ← Back
       </button>
       <div
+        className="project-detail-layout"
         style={{
           display: "flex",
           flexDirection: "row",
@@ -46,11 +47,12 @@ const ProjectDetail = () => {
           padding: "2.5rem",
           maxWidth: "900px",
           width: "95vw",
+          boxSizing: "border-box",
           gap: "2.5rem",
         }}
       >
         {/* Project Image */}
-        <div style={{
+        <div className="project-detail-image" style={{
           flex: "0 0 240px",
           display: "flex",
           alignItems: "center",
@@ -82,6 +84,25 @@ const ProjectDetail = () => {
               </li>
             ))}
           </ul>
+          {proj.dashboardUrl && (
+            <a
+              href={proj.dashboardUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-block",
+                marginTop: "0.8rem",
+                background: "#ff3333",
+                color: "#fff",
+                borderRadius: "8px",
+                padding: "0.7rem 1rem",
+                textDecoration: "none",
+                fontWeight: "bold"
+              }}
+            >
+              View interactive Tableau dashboard ↗
+            </a>
+          )}
           {proj.sourceUrl && (
             <a
               href={proj.sourceUrl}
@@ -107,17 +128,18 @@ const ProjectDetail = () => {
       <style>
         {`
           @media (max-width: 900px) {
-            div[style*="display: flex"][style*="flex-direction: row"] {
+            .project-detail-layout {
               flex-direction: column !important;
               align-items: center !important;
               padding: 1.2rem !important;
               gap: 1.2rem !important;
             }
-            div[style*="flex: 0 0 240px"] {
+            .project-detail-image {
               width: 100% !important;
+              flex-basis: auto !important;
               justify-content: center !important;
             }
-            img[alt] {
+            .project-detail-image img {
               width: 140px !important;
               height: 140px !important;
               padding: 0.7rem !important;

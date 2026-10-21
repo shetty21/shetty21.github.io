@@ -1,6 +1,19 @@
 // projectsData.js
 export const projectsData = [
   {
+    slug: "glp1-research-landscape-tableau",
+    title: "GLP-1 Research Landscape: Interactive Tableau Dashboard",
+    image: "/assets/glp1-research-landscape.svg",
+    tools: "Tableau Public, Python, Data Preparation, Interactive Dashboard Design",
+    dashboardUrl: "https://public.tableau.com/views/GLP-1ResearchLandscape/GLP-1ResearchLandscape?:language=en-US&:display_count=n&:origin=viz_share_link",
+    bullets: [
+      "Prepared and explored 1,953 clinical-trial registry records across nine drug-query groups in an April 2026 dataset snapshot.",
+      "Built three connected Tableau dashboards: Research Overview, Drug Deep Dive, and Trial Explorer, with navigation buttons and a consistent slate-and-teal visual theme.",
+      "Added drug, phase, and recruitment-status filters, registry-ID search, a labeled drug-by-phase heatmap, timelines, and a study-level register.",
+      "Documented missing dates, unreported phases, and collector-query labels. This portfolio project describes research activity; it does not establish drug efficacy or comparative safety. Source: devtayyabsajjad's GLP-1 Master Dataset on Kaggle."
+    ]
+  },
+  {
     slug: "balanced-tree-clothing-sql-case-study",
     title: "Balanced Tree Clothing Co.: Retail Sales Analysis",
     image: "/assets/balanced-tree.svg",
